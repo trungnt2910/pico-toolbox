@@ -4,14 +4,15 @@
 
 [Version]
 Signature="$WINDOWS NT$"
-Class=Sample ; TODO: edit Class
-ClassGuid={78A1C341-4539-11d3-B88D-00C04FAD5171} ; TODO: edit ClassGuid
+Class=PicoDrv ; TODO: edit Class
+ClassGuid={41C07F1F-4C3D-B33F-2910-DEADFACE0000} ; TODO: edit ClassGuid
 Provider=%ManufacturerName%
 CatalogFile=picodrv.cat
 DriverVer= ; TODO: set DriverVer in stampinf property pages
 
 [DestinationDirs]
 DefaultDestDir = 12
+picopoc_Device_CoInstaller_CopyFiles = 11
 
 ; ================= Class section =====================
 
@@ -27,6 +28,7 @@ HKR,,Icon,,-5
 
 [SourceDisksFiles]
 picodrv.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
 
 ;*****************************************
 ; Install Section
@@ -60,9 +62,6 @@ ServiceBinary  = %12%\picodrv.sys
 ;--- picopoc_Device Coinstaller installation ------
 ;
 
-[DestinationDirs]
-picopoc_Device_CoInstaller_CopyFiles = 11
-
 [picopoc_Device.NT.CoInstallers]
 AddReg=picopoc_Device_CoInstaller_AddReg
 CopyFiles=picopoc_Device_CoInstaller_CopyFiles
@@ -72,9 +71,6 @@ HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfC
 
 [picopoc_Device_CoInstaller_CopyFiles]
 WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
-
-[SourceDisksFiles]
-WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
 
 [picopoc_Device.NT.Wdf]
 KmdfService =  picodrv, picopoc_wdfsect

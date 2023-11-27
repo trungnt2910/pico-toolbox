@@ -82,7 +82,8 @@ static unsigned int PicoMon_Load(void* pData, size_t sDataSize)
 
 	RtlZeroMemory(&gData, sizeof(gData));
 
-	NTSTATUS status = PsSetCreateProcessNotifyRoutineEx2(PsCreateProcessNotifyPico, ProcessNotifyCallbackEx, FALSE);
+	// Seems like later versions use "PsCreateProcessNotifySubsystems" instead of "PsCreateProcessNotifyPico".
+	NTSTATUS status = PsSetCreateProcessNotifyRoutineEx2(PsCreateProcessNotifySubsystems, ProcessNotifyCallbackEx, FALSE);
 	
 	// now the tricky part, first check if there is already pico provider installed
 
@@ -90,15 +91,16 @@ static unsigned int PicoMon_Load(void* pData, size_t sDataSize)
 
 	PICODRV_LOG_INFO("PICOMON: now trying to get pico callbacks...");
 	
-	if NT_SUCCESS(GetPICOCallbacks(&pRoutines)) {
+	if NT_SUCCESS(GetPicoCallbacks(&pRoutines)) {
 		// now we have pointer to all calbacks, so let's get one for getting
 		// name of process and store it. 
 
 		// now try to check if all data are OK
 		// FIXME: beware of concurrent access
-		if ((pRoutines->Size != 0) && (pRoutines->GetAllocatedProcessImageName != NULL)) {
+		if ((pRoutines->Size != 0) && (pRoutines->DispatchSystemCall != NULL)) {
 			gData.pRoutines = pRoutines;
 			// this should be address of routine inside lxsscore.sys
+			// For some reasons, in recent versions of Windows, GetAllocatedProcessImageName is NULL.
 			gData.pGetAllocatedProcessImageName = pRoutines->GetAllocatedProcessImageName;
 					
 			
@@ -124,6 +126,7 @@ static unsigned int PicoMon_Load(void* pData, size_t sDataSize)
 		}
 		else {
 			PICODRV_LOG_ERROR("PICOMON: callbacks don't seem to be valid or linux subsystem is not installed");
+			PICODRV_LOG_ERROR("PICOMON: pRoutines->Size: %i, pRoutines->GetAllocatedProcessImageName: %p", (int)pRoutines->Size, pRoutines->GetAllocatedProcessImageName);
 		}
 	}
 
@@ -137,7 +140,7 @@ static unsigned int PicoMon_UnLoad(void* pData, size_t sDataSize)
 	PICODRV_LOG_INFO("PICOMON: PICO process monitor unloading...");
 	
 	// unregister process notification
-	PsSetCreateProcessNotifyRoutineEx2(PsCreateProcessNotifyPico, ProcessNotifyCallbackEx, TRUE);
+	PsSetCreateProcessNotifyRoutineEx2(PsCreateProcessNotifySubsystems, ProcessNotifyCallbackEx, TRUE);
 	if (gData.pOriginalPicoProviderProcessExit)
 	{
 		gData.pRoutines->ExitProcess = gData.pOriginalPicoProviderProcessExit;
@@ -169,6 +172,7 @@ unsigned int PicoMon_ToolDispatcher(unsigned int uCmd, void* pData, size_t sData
 
 	}
 
+	return STATUS_INVALID_PARAMETER;
 }
 
 }

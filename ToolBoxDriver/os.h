@@ -54,9 +54,6 @@ typedef struct _SECTION_IMAGE_INFORMATION
 } SECTION_IMAGE_INFORMATION, *PSECTION_IMAGE_INFORMATION;
 
 
-typedef enum _PSCREATEPROCESSNOTIFYTYPE {
-	PsCreateProcessNotifyPico = 0
-} PSCREATEPROCESSNOTIFYTYPE;
 
 
 /* NtQueryInformationSystem things */
@@ -82,9 +79,3 @@ __if_not_exists(RTL_PROCESS_MODULE_INFORMATION) {
 	} RTL_PROCESS_MODULES, *PRTL_PROCESS_MODULES;
 }
 
-
-extern  "C" NTSTATUS PsSetCreateProcessNotifyRoutineEx2(
-	_In_ PSCREATEPROCESSNOTIFYTYPE NotifyType,
-	_In_ PVOID NotifyInformation,
-	_In_ BOOLEAN Remove
-);

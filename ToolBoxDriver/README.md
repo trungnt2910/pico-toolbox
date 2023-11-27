@@ -22,12 +22,12 @@ in \SystemRoot path.
 
 Tools to build it and test it:
 =============================
-- Visual Studio 2015, WDK 
-- Windows 10 Entrprise edition Insider build 14390
+- Visual Studio 2022, WDK 
+- Windows 11 Professional 23H2
 - WinDbg recommended
 	
 
-Contact:
+Original author:
 ========
 Martin Hron (martin@hron.eu, @thinkcz, https://about.me/martin.hron)
 

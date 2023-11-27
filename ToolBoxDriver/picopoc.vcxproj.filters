@@ -63,6 +63,9 @@
     <ClInclude Include="PicoMon.h">
       <Filter>Source Files\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="pe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Inf Include="picodrv.inf">
@@ -73,5 +76,8 @@
     <MASM Include="picodrv.asm">
       <Filter>Source Files</Filter>
     </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>
